@@ -1,35 +1,28 @@
 const express = require("express");
-
 const app = express();
+const connectionDB = require('./config/database');
+const User = require("./model/user")
 
-const {authToken} = require('./middalwares/auth')
-app.use("/user",authToken)
+app.use(express.json());
 
-app.get("/user/getAlldata",(req,res)=>{
-  res.send("get all data")
+app.post("/signup", async (req,res)=>{
+  const user = new User(req.body);
+  try{
+    await user.save();
+    res.send("data added successfully...")
+  }catch(err){
+    res.status(400).send("data cannot stored...")
+  }
 })
 
 
-app.get("/admin/getAlldata",(req,res)=>{
-  res.send("get all admin data")
+connectionDB.then(()=>{
+  console.log("database connected successfully...");
+  app.listen(7777,(err,req,res,next)=>{
+    console.log("server is running on port 7777");
+    
+  })
 })
-
-
-app.post("/user/updateData",(req,res)=>{
-  res.send("data update successfully...")
+.catch(()=>{
+  console.log("Database not connected...");
 })
-
-
-app.post("/admin/updateData",(req,res)=>{
-  res.send("admin data update successfully...")
-})
-
-// app.use("/test", (req, res) => {
-//   console.log("hello test test test");
-
-//   res.send("hello test test test");
-// });
-
-app.listen(7777, () => {
-  console.log("your server is stareted successfully on port 7777...");
-});
