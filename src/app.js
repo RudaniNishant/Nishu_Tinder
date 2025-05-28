@@ -39,13 +39,60 @@ app.get("/feed",async (req,res)=>{
   }else{
     res.send(user);
   }  
-  }catch(err){
-    console.log(err);
-    
+  }catch(err){    
     res.status(400).send("something went wrong")
   }
   
 })
+
+app.post("/userbyid",async (req,res)=>{
+  try{
+    const user = await User.findById(req.body._id)
+    if(!user){
+    res.status(404).send("user not found");
+  }else{
+    res.send(user);
+  }  
+  }catch(err){    
+    console.log(err);
+    
+    res.status(400).send("something went wrong")
+  }
+})
+
+app.delete("/deleteuserbyid",async (req,res)=>{
+  try{
+    const user = await User.findByIdAndDelete(req.body._id)
+    if(!user){
+    res.status(404).send("user not found");
+  }else{
+    res.send("user deleted duccessfully...");
+  }  
+  }catch(err){    
+    console.log(err);
+    
+    res.status(400).send("something went wrong")
+  }
+})
+
+app.patch("/updateUser",async (req,res)=>{
+  try{
+    const user = await User.findByIdAndUpdate(req.body.userId,req.body,{
+      runValidators : true
+    })
+    if(!user){
+    res.status(404).send("user not found");
+  }else{
+    res.send("user updated duccessfully...");
+  }  
+  }catch(err){    
+    console.log(err);
+    
+    res.status(400).send("something went wrong")
+  }
+})
+
+
 
 
 
